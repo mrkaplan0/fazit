@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 enum MenuItemCase { fromLocal, fromUrl }
 
@@ -31,8 +32,24 @@ class _BooksMainpageState extends State<BooksMainpage> {
 
                   if (result != null) {
                     File file = File(result.files.single.path!);
+                    String fileName = file.path.split('/').last;
 
-                    String? outputFile = await FilePicker.platform.saveFile()
+//get app directory
+                    final Directory appDocumentsDir =
+                        await getApplicationDocumentsDirectory();
+                    final newDirectory =
+                        Directory('${appDocumentsDir.path}/books');
+
+                    // create folder if not exists
+                    if (!await newDirectory.exists()) {
+                      await newDirectory.create(recursive: true);
+                    }
+
+                    // save file to the new folder
+                    final path = '${newDirectory.path}/$fileName';
+                    final localFile = await File(path).create();
+                    await localFile.writeAsBytes(await file.readAsBytes());
+                    print('Dosya yerel depolamaya kaydedildi: $path');
                   } else {
                     // User canceled the picker
                   }
