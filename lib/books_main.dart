@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:fazit/epub_reader/epub_reader.dart';
+import 'package:fazit/models/file_model.dart';
+import 'package:fazit/widgets/menu_item.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +20,8 @@ class BooksMainpage extends StatefulWidget {
 class _BooksMainpageState extends State<BooksMainpage> {
   late Directory booksDirectory;
   List allFilesFromDic = [];
+  List<MyFile> epubFiles = [];
+  List<MyFile> pdfFiles = [];
   @override
   void initState() {
     super.initState();
@@ -35,6 +41,17 @@ class _BooksMainpageState extends State<BooksMainpage> {
     setState(() {
       allFilesFromDic = booksDirectory.listSync();
     });
+    for (var e in allFilesFromDic) {
+      MyFile myFile = MyFile(fileEntity: e);
+
+      if (myFile.extension == ".epub") {
+        epubFiles.add(myFile);
+        print("aa" + epubFiles.toString());
+      } else if (myFile.extension == ".pdf") {
+        pdfFiles.add(myFile);
+        print("sssss" + pdfFiles.toString());
+      }
+    }
   }
 
   @override
@@ -43,6 +60,13 @@ class _BooksMainpageState extends State<BooksMainpage> {
         appBar: AppBar(
           title: const Text("Bücher"),
           actions: [
+            TextButton(
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EpubReader(title: "title"),
+                    )),
+                child: const Text("fds")),
             PopupMenuButton<MenuItemCase>(
                 onSelected: (MenuItemCase selectedItem) async {
                   if (selectedItem == MenuItemCase.fromLocal) {
@@ -63,20 +87,13 @@ class _BooksMainpageState extends State<BooksMainpage> {
                     ])
           ],
         ),
-        body: ListView.builder(
-          itemCount: allFilesFromDic.length,
-          itemBuilder: (context, i) {
-            var myFile = allFilesFromDic[i] as File;
-            String extension = p.extension(myFile.path);
-            String fileName = p.basenameWithoutExtension(myFile.path);
-
-            return Column(
-              children: [
-                Text(fileName),
-                Text(extension),
-              ],
-            );
-          },
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              ExpansionWidget(title: "Epubs", filesList: epubFiles),
+              ExpansionWidget(title: "pdfs", filesList: pdfFiles),
+            ],
+          ),
         ));
   }
 
@@ -96,5 +113,58 @@ class _BooksMainpageState extends State<BooksMainpage> {
     } else {
       // User canceled the picker
     }
+  }
+}
+
+class ExpansionWidget extends StatelessWidget {
+  final String title;
+  final List<MyFile> filesList;
+
+  const ExpansionWidget(
+      {super.key, required this.title, required this.filesList});
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      childrenPadding: EdgeInsets.all(8),
+      initiallyExpanded: true,
+      title: Text(title),
+      children: [
+        Wrap(
+          children: [
+            for (var file in filesList) ...[
+              Container(
+                margin: EdgeInsets.all(4.0),
+                decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(10)),
+                width: 100,
+                height: 150,
+                child: Text(
+                  file.fileName!,
+                  overflow: TextOverflow.clip,
+                ),
+              )
+            ]
+          ],
+        )
+
+        /*  ListView.builder(
+          shrinkWrap: true,
+          itemCount: filesList.length,
+          itemBuilder: (context, i) {
+            return Container(
+              color: Colors.amber,
+              width: 50,
+              height: 100,
+              child: Text(
+                filesList[i].fileName!,
+                overflow: TextOverflow.clip,
+              ),
+            );
+          },
+        ) */
+      ],
+    );
   }
 }
