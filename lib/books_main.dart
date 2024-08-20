@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:fazit/epub_reader/epub_reader.dart';
 import 'package:fazit/models/file_model.dart';
+import 'package:fazit/pdf_reader/pdf_viewer_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,6 +29,8 @@ class _BooksMainpageState extends State<BooksMainpage> {
 
   // Make New Function
   void _listofFiles() async {
+    epubFiles.clear();
+    pdfFiles.clear();
     //get app directory
     final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
     booksDirectory = Directory('${appDocumentsDir.path}/books');
@@ -103,7 +106,9 @@ class _BooksMainpageState extends State<BooksMainpage> {
       final path = '${booksDirectory.path}/$fileName';
       final localFile = await File(path).create();
       await localFile.writeAsBytes(await file.readAsBytes());
-      print('Dosya yerel depolamaya kaydedildi: $path');
+      setState(() {
+        _listofFiles();
+      });
     } else {
       // User canceled the picker
     }
@@ -138,7 +143,9 @@ class ListWidget extends StatelessWidget {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EpubReader(myFile: filesList[index]),
+                  builder: (context) => title == "pdfs"
+                      ? PdfViewerPage(myFile: filesList[index])
+                      : EpubReader(myFile: filesList[index]),
                 )),
             child: Column(
               children: [
