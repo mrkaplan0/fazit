@@ -1,12 +1,13 @@
 import 'package:fazit/epub_reader/chapter_drawer.dart';
 import 'package:fazit/epub_reader/search_page.dart';
+import 'package:fazit/models/file_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_epub_viewer/flutter_epub_viewer.dart';
 
 class EpubReader extends StatefulWidget {
-  const EpubReader({super.key, required this.title});
+  const EpubReader({super.key, required this.myFile});
 
-  final String title;
+  final MyFile myFile;
 
   @override
   State<EpubReader> createState() => _EpubReaderState();
@@ -29,7 +30,7 @@ class _EpubReaderState extends State<EpubReader> {
       ),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(widget.myFile.fileName ?? ""),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

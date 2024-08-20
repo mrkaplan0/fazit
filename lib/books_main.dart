@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:fazit/epub_reader/epub_reader.dart';
 import 'package:fazit/models/file_model.dart';
-import 'package:fazit/widgets/menu_item.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'dart:math' as math;
 
 enum MenuItemCase { fromLocal, fromUrl }
 
@@ -60,13 +58,6 @@ class _BooksMainpageState extends State<BooksMainpage> {
         appBar: AppBar(
           title: const Text("Bücher"),
           actions: [
-            TextButton(
-                onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EpubReader(title: "title"),
-                    )),
-                child: const Text("fds")),
             PopupMenuButton<MenuItemCase>(
                 onSelected: (MenuItemCase selectedItem) async {
                   if (selectedItem == MenuItemCase.fromLocal) {
@@ -87,13 +78,16 @@ class _BooksMainpageState extends State<BooksMainpage> {
                     ])
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              ExpansionWidget(title: "Epubs", filesList: epubFiles),
-              ExpansionWidget(title: "pdfs", filesList: pdfFiles),
-            ],
-          ),
+        body: Column(
+          children: [
+            myDivider("e-Books"),
+            ListWidget(title: "Epubs", filesList: epubFiles),
+            const SizedBox(
+              height: 20,
+            ),
+            myDivider("pdfs"),
+            ListWidget(title: "pdfs", filesList: pdfFiles),
+          ],
         ));
   }
 
@@ -116,55 +110,62 @@ class _BooksMainpageState extends State<BooksMainpage> {
   }
 }
 
-class ExpansionWidget extends StatelessWidget {
+Widget myDivider(String title) {
+  return Column(
+    children: [
+      Text(title),
+      const Divider(),
+    ],
+  );
+}
+
+class ListWidget extends StatelessWidget {
   final String title;
   final List<MyFile> filesList;
 
-  const ExpansionWidget(
-      {super.key, required this.title, required this.filesList});
+  const ListWidget({super.key, required this.title, required this.filesList});
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      childrenPadding: EdgeInsets.all(8),
-      initiallyExpanded: true,
-      title: Text(title),
-      children: [
-        Wrap(
-          children: [
-            for (var file in filesList) ...[
-              Container(
-                margin: EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(10)),
-                width: 100,
-                height: 150,
-                child: Text(
-                  file.fileName!,
-                  overflow: TextOverflow.clip,
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: filesList.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EpubReader(myFile: filesList[index]),
+                )),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.book_rounded,
+                  size: 160,
+                  color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+                      .withOpacity(0.7),
                 ),
-              )
-            ]
-          ],
-        )
-
-        /*  ListView.builder(
-          shrinkWrap: true,
-          itemCount: filesList.length,
-          itemBuilder: (context, i) {
-            return Container(
-              color: Colors.amber,
-              width: 50,
-              height: 100,
-              child: Text(
-                filesList[i].fileName!,
-                overflow: TextOverflow.clip,
-              ),
-            );
-          },
-        ) */
-      ],
+                Text(
+                  shortenText(filesList[index].fileName!, 20),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  String shortenText(String text, int maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    } else {
+      return text;
+    }
   }
 }
