@@ -77,7 +77,6 @@ class _EpubReaderState extends State<EpubReader> {
                 settings: ContextMenuSettings(
                     hideDefaultSystemContextMenuItems: true),
               ),
-              headers: {},
               onChaptersLoaded: (chapters) {},
               onEpubLoaded: () async {
                 print('Epub loaded');

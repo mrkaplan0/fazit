@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:math' as math;
 
+import 'widgets/list_widget.dart';
+
 enum MenuItemCase { fromLocal, fromUrl }
 
 class BooksMainpage extends StatefulWidget {
@@ -122,57 +124,4 @@ Widget myDivider(String title) {
       const Divider(),
     ],
   );
-}
-
-class ListWidget extends StatelessWidget {
-  final String title;
-  final List<MyFile> filesList;
-
-  const ListWidget({super.key, required this.title, required this.filesList});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: filesList.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => title == "pdfs"
-                      ? PdfViewerPage(myFile: filesList[index])
-                      : EpubReader(myFile: filesList[index]),
-                )),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.book_rounded,
-                  size: 160,
-                  color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(0.7),
-                ),
-                Text(
-                  shortenText(filesList[index].fileName!, 20),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  String shortenText(String text, int maxLength) {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
-    } else {
-      return text;
-    }
-  }
 }
