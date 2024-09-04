@@ -13,22 +13,32 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Fachinformatiker")),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            MenuItem(
-              text: "Bücher",
-              icon: Icons.menu_book,
-              onPress: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const BooksMainpage()));
-              },
-            ),
-          ],
+      appBar: AppBar(
+        centerTitle: true,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Image.asset(
+            "assets/fazit_text.png",
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              MenuItem(
+                text: "Bücher",
+                icon: Icons.menu_book,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const BooksMainpage()));
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

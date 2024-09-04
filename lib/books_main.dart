@@ -1,12 +1,8 @@
 import 'dart:io';
-import 'package:fazit/epub_reader/epub_reader.dart';
 import 'package:fazit/models/file_model.dart';
-import 'package:fazit/pdf_reader/pdf_viewer_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:math' as math;
-
 import 'widgets/list_widget.dart';
 
 enum MenuItemCase { fromLocal, fromUrl }
@@ -83,16 +79,18 @@ class _BooksMainpageState extends State<BooksMainpage> {
                     ])
           ],
         ),
-        body: Column(
-          children: [
-            myDivider("e-Books"),
-            ListWidget(title: "Epubs", filesList: epubFiles),
-            const SizedBox(
-              height: 20,
-            ),
-            myDivider("pdfs"),
-            ListWidget(title: "pdfs", filesList: pdfFiles),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              myDivider("e-Books"),
+              ListWidget(title: "Epubs", filesList: epubFiles),
+              const SizedBox(
+                height: 20,
+              ),
+              myDivider("pdfs"),
+              ListWidget(title: "pdfs", filesList: pdfFiles),
+            ],
+          ),
         ));
   }
 
