@@ -1,7 +1,7 @@
-import 'package:fazitadmin/models/infocart_model.dart';
-import 'package:fazitadmin/models/user.dart';
-import 'package:fazitadmin/services/delegates/database_delegate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fazit/models/infocart_model.dart';
+import 'package:fazit/models/user_model.dart';
+import 'package:fazit/services/delegates/database_delegate.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreService implements MyDatabaseDelegate {
@@ -45,7 +45,7 @@ class FirestoreService implements MyDatabaseDelegate {
           .set({card.cardID: card.toMap()}, SetOptions(merge: true));
 
       return true;
-    } on Exception catch (e) {
+    } catch (e) {
       return false;
     }
   }

@@ -1,4 +1,4 @@
-import 'package:fazitadmin/models/user.dart';
+import 'package:fazit/models/user_model.dart';
 
 abstract class MyAuthenticationDelegate {
   Future<MyUser?> currentUser();

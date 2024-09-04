@@ -3,7 +3,7 @@ import 'package:fazit/models/file_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'widgets/list_widget.dart';
+import '../widgets/file_list_widget.dart';
 
 enum MenuItemCase { fromLocal, fromUrl }
 
@@ -45,10 +45,8 @@ class _BooksMainpageState extends State<BooksMainpage> {
 
       if (myFile.extension == ".epub") {
         epubFiles.add(myFile);
-        print("aa" + epubFiles.toString());
       } else if (myFile.extension == ".pdf") {
         pdfFiles.add(myFile);
-        print("sssss" + pdfFiles.toString());
       }
     }
   }

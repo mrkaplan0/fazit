@@ -1,5 +1,5 @@
-import 'package:fazitadmin/models/user.dart';
-import 'package:fazitadmin/services/delegates/auth_delegate.dart';
+import 'package:fazit/models/user_model.dart';
+import 'package:fazit/services/delegates/auth_delegate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

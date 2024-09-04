@@ -12,7 +12,7 @@ class MyUser {
   DateTime validationDate;
   bool isTeacher;
   bool isAdmin;
-  Enum branch;
+  Enum? branch;
 
   MyUser({
     required this.userID,
@@ -25,7 +25,6 @@ class MyUser {
     required this.isAdmin,
     required this.branch,
   });
- 
 
   MyUser copyWith({
     String? userID,
@@ -71,17 +70,20 @@ class MyUser {
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] as String,
       profilURL: map['profilURL'] != null ? map['profilURL'] as String : null,
-      createdDate: DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int),
-      validationDate: DateTime.fromMillisecondsSinceEpoch(map['validationDate'] as int),
+      createdDate:
+          DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int),
+      validationDate:
+          DateTime.fromMillisecondsSinceEpoch(map['validationDate'] as int),
       isTeacher: map['isTeacher'] as bool,
       isAdmin: map['isAdmin'] as bool,
-      branch: map['branch'] as Fach,
+      branch: map['branch'] != null ? map['branch'] as Fach : null,
     );
   }
- 
+
   String toJson() => json.encode(toMap());
 
-  factory MyUser.fromJson(String source) => MyUser.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MyUser.fromJson(String source) =>
+      MyUser.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -91,29 +93,28 @@ class MyUser {
   @override
   bool operator ==(covariant MyUser other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.userID == userID &&
-      other.username == username &&
-      other.email == email &&
-      other.profilURL == profilURL &&
-      other.createdDate == createdDate &&
-      other.validationDate == validationDate &&
-      other.isTeacher == isTeacher &&
-      other.isAdmin == isAdmin &&
-      other.branch == branch;
+
+    return other.userID == userID &&
+        other.username == username &&
+        other.email == email &&
+        other.profilURL == profilURL &&
+        other.createdDate == createdDate &&
+        other.validationDate == validationDate &&
+        other.isTeacher == isTeacher &&
+        other.isAdmin == isAdmin &&
+        other.branch == branch;
   }
 
   @override
   int get hashCode {
     return userID.hashCode ^
-      username.hashCode ^
-      email.hashCode ^
-      profilURL.hashCode ^
-      createdDate.hashCode ^
-      validationDate.hashCode ^
-      isTeacher.hashCode ^
-      isAdmin.hashCode ^
-      branch.hashCode;
+        username.hashCode ^
+        email.hashCode ^
+        profilURL.hashCode ^
+        createdDate.hashCode ^
+        validationDate.hashCode ^
+        isTeacher.hashCode ^
+        isAdmin.hashCode ^
+        branch.hashCode;
   }
 }

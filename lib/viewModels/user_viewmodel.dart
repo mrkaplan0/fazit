@@ -1,7 +1,7 @@
-import 'package:fazitadmin/models/user.dart';
-import 'package:fazitadmin/services/delegates/auth_delegate.dart';
-import 'package:fazitadmin/services/firebase_auth.dart';
-import 'package:fazitadmin/services/firebase_firestore.dart';
+import 'package:fazit/models/user_model.dart';
+import 'package:fazit/services/delegates/auth_delegate.dart';
+import 'package:fazit/services/firebase_auth.dart';
+import 'package:fazit/services/firebase_firestore.dart';
 import 'package:flutter/material.dart';
 
 enum ViewState { idle, busy }
@@ -53,7 +53,6 @@ class UserViewModel with ChangeNotifier implements MyAuthenticationDelegate {
           await authService.createUserWithEmailAndPassword(email, password);
 
       if (_myUser != null) {
-        ;
         bool result = await firestoreService.saveMyUser(_myUser!);
 
         if (result == true) {

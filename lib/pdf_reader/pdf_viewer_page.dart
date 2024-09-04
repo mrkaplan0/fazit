@@ -15,7 +15,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   @override
   void initState() {
     super.initState();
-    print(widget.myFile.path!);
     pdfController = PdfController(
       document: PdfDocument.openFile(widget.myFile.path!),
     );
@@ -37,7 +36,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
           controller: pdfController,
           onDocumentError: (error) => showDialog(
             context: context,
-            builder: (context) => AlertDialog.adaptive(
+            builder: (context) => const AlertDialog.adaptive(
               title: Text("Error"),
             ),
           ),
