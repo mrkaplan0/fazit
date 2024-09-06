@@ -20,7 +20,5 @@ final textEditingProvider =
   return editingController;
 });
 
-final addcardProvider = FutureProvider.family<bool, MyCard>((ref, card) async {
-  var result = await ref.read(firestoreProvider).addCard(card);
-  return result;
-});
+
+

@@ -1,4 +1,5 @@
 import 'package:fazit/pages/books_main.dart';
+import 'package:fazit/pages/select_themes_page.dart';
 import 'package:fazit/widgets/menu_item.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
+          child: Wrap(
             children: [
               MenuItem(
                 text: "Bücher",
@@ -35,6 +36,16 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const BooksMainpage()));
+                },
+              ),
+              MenuItem(
+                text: "KarteiKarten",
+                icon: Icons.class_rounded,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectThemesPage()));
                 },
               ),
             ],
