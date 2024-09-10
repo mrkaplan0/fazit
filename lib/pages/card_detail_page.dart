@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:fazit/models/infocart_model.dart';
+import 'package:fazit/providers/providers.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
-final displayFrontProvider = StateProvider<bool>((ref) {
+final displayFrontProvider = StateProvider.autoDispose<bool>((ref) {
   return true;
 });
 
@@ -20,8 +21,10 @@ class CardDetailPage extends ConsumerStatefulWidget {
 class _CardDetailPageState extends ConsumerState<CardDetailPage> {
   @override
   Widget build(BuildContext context) {
-    final cardHeight = MediaQuery.of(context).size.height * 0.8;
+    final cardHeight = MediaQuery.of(context).size.height * 7 / 9;
+
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -29,50 +32,97 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
         child: Stack(
           children: widget.cardList!.map((card) {
             int index = widget.cardList!.indexOf(card);
-            return Dismissible(
-              key: Key(card.cardID),
-              direction: DismissDirection.horizontal,
-              onDismissed: (direction) {
-                setState(() {
-                  widget.cardList!.removeAt(index);
-                });
-                if (direction == DismissDirection.endToStart) {
-                  // Handle left swipe
-                  print("Swiped left on card $index");
-                } else if (direction == DismissDirection.startToEnd) {
-                  // Handle right swipe
-                  print("Swiped right on card $index");
-                }
-              },
-              background: Container(
-                color: Colors.green,
-                alignment: Alignment.centerRight,
-                child: const Icon(Icons.thumb_up, color: Colors.white),
-              ),
-              secondaryBackground: Container(
-                color: Colors.red,
-                alignment: Alignment.centerLeft,
-                child: const Icon(Icons.thumb_down, color: Colors.white),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  ref.read(displayFrontProvider.notifier).state =
-                      !ref.read(displayFrontProvider);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 600),
-                      switchInCurve: Curves.easeInBack,
-                      switchOutCurve: Curves.easeInBack.flipped,
-                      layoutBuilder: (widget, list) =>
-                          Stack(children: [widget!, ...list]),
-                      transitionBuilder: _transitionBuilder,
-                      child: ref.watch(displayFrontProvider)
-                          ? _cardFront(cardHeight, card)
-                          : _cardBack(cardHeight, card)),
+
+            return Column(
+              children: [
+                Dismissible(
+                  key: Key(card.cardID),
+                  direction: DismissDirection.horizontal,
+                  onUpdate: (details) {
+                    ref.invalidate(displayFrontProvider);
+                  },
+                  onDismissed: (direction) {
+                    setState(() {
+                      widget.cardList!.removeAt(index);
+                    });
+                    if (direction == DismissDirection.endToStart) {
+                      // On left swipe add card to local db as Wrong
+
+                      ref
+                          .read(localServiceProvider)
+                          .addWrongToLocal(card.cardID);
+                    } else if (direction == DismissDirection.startToEnd) {
+                      // on right swipe delete wrong card from local db.
+                      if (ref
+                          .read(localServiceProvider)
+                          .checkwrongscardIDFromLocal(card.cardID)) {
+                        ref
+                            .read(localServiceProvider)
+                            .deleteWrongFromLocal(card.cardID);
+                      }
+                    }
+                  },
+                  background: Container(
+                    color: Colors.green,
+                    alignment: Alignment.centerRight,
+                    child: const Icon(Icons.thumb_up, color: Colors.white),
+                  ),
+                  secondaryBackground: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    child: const Icon(Icons.thumb_down, color: Colors.white),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.read(displayFrontProvider.notifier).state =
+                          !ref.read(displayFrontProvider);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 600),
+                          switchInCurve: Curves.easeInBack,
+                          switchOutCurve: Curves.easeInBack.flipped,
+                          layoutBuilder: (widget, list) =>
+                              Stack(children: [widget!, ...list]),
+                          transitionBuilder: _transitionBuilder,
+                          child: ref.watch(displayFrontProvider)
+                              ? _cardFront(cardHeight, card)
+                              : _cardBack(cardHeight, card)),
+                    ),
+                  ),
                 ),
-              ),
+                IconButton.filledTonal(
+                    onPressed: () {
+                      if (ref
+                          .read(localServiceProvider)
+                          .checkcardIDFromLocal(card.cardID)) {
+                        var result = ref
+                            .read(localServiceProvider)
+                            .deleteFavoriteFromLocal(card.cardID);
+                        if (result) {
+                          ref
+                              .refresh(localServiceProvider)
+                              .checkcardIDFromLocal(card.cardID);
+                        }
+                      } else {
+                        var result = ref
+                            .read(localServiceProvider)
+                            .addFavoriteToLocal(card.cardID);
+
+                        if (result) {
+                          ref
+                              .refresh(localServiceProvider)
+                              .checkcardIDFromLocal(card.cardID);
+                        }
+                      }
+                    },
+                    isSelected: ref
+                        .watch(localServiceProvider)
+                        .checkcardIDFromLocal(card.cardID),
+                    icon: const Icon(Icons.star_border_outlined),
+                    selectedIcon: const Icon(Icons.star))
+              ],
             );
           }).toList(),
         ),
@@ -109,12 +159,14 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
           padding: const EdgeInsets.all(16.0),
           height: height,
           width: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildFrontSide(myCard),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _buildFrontSide(myCard),
+                ),
               ),
             ),
           )),
@@ -130,12 +182,14 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
           padding: const EdgeInsets.all(16.0),
           height: height,
           width: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildBackSide(myCard),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _buildBackSide(myCard),
+                ),
               ),
             ),
           )),

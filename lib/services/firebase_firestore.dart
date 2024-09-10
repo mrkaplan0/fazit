@@ -49,4 +49,22 @@ class FirestoreService implements MyDatabaseDelegate {
       return false;
     }
   }
+
+  @override
+  Future<List<MyCard>> fetchCards() async {
+    List<MyCard> cardList = [];
+
+    try {
+      var result = await db.collection("Cards").doc("Cards").get();
+      if (result.data() != null) {
+        for (var element in result.data()!.values) {
+          cardList.add(MyCard.fromMap(element));
+        }
+      }
+
+      return cardList;
+    } catch (e) {
+      return cardList;
+    }
+  }
 }

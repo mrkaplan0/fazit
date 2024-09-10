@@ -20,7 +20,7 @@ class LandingPage extends ConsumerWidget {
       if (user == null) {
         return const LoginPage();
       } else if (user.isAdmin == true) {
-        return const HomePage();
+        return  HomePage();
       } else {
         debugPrint("router home user $user");
         return const Scaffold(

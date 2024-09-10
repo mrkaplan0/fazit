@@ -63,7 +63,7 @@ class _EpubReaderState extends State<EpubReader> {
                     id: 1,
                     action: () async {
                       epubController.addHighlight(cfi: textSelectionCfi);
-                      print("lkjafhdsölkfhsölhj" + textSelectionCfi);
+                      print("lkjafhdsölkfhsölhj $textSelectionCfi");
                     },
                   ),
                   ContextMenuItem(

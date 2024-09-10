@@ -1,18 +1,20 @@
+import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/pages/books_main.dart';
+import 'package:fazit/pages/my_wrongs_page.dart';
 import 'package:fazit/pages/select_themes_page.dart';
+import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/menu_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+// ignore: must_be_immutable
+class HomePage extends ConsumerWidget {
+  HomePage({super.key});
+  List<MyCard> cardList = [];
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    fetchCards(ref);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -45,7 +47,19 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SelectThemesPage()));
+                          builder: (context) =>
+                              SelectThemesPage(cardList: cardList)));
+                },
+              ),
+              MenuItem(
+                text: "Meine Fehler",
+                icon: Icons.error_outline_rounded,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MyWrongsPage(cardList: cardList)));
                 },
               ),
             ],
@@ -53,5 +67,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void fetchCards(WidgetRef ref) async {
+    cardList = await ref.read(fetchCardsProvider.future);
   }
 }

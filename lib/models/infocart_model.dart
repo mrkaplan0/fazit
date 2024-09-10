@@ -67,8 +67,8 @@ class MyCard {
     return <String, dynamic>{
       'cardID': cardID,
       'theme': theme,
-      'frontNoteFormat': frontNoteFormat.toString(),
-      'backNoteFormat': backNoteFormat.toString(),
+      'frontNoteFormat': frontNoteFormat.name.toString(),
+      'backNoteFormat': backNoteFormat.name.toString(),
       'frontSideNote': frontSideNote,
       'frontSideURL': frontSideURL,
       'backSideNote': backSideNote,
@@ -84,8 +84,8 @@ class MyCard {
     return MyCard(
       cardID: map['cardID'] as String,
       theme: map['theme'] as String,
-      frontNoteFormat: map['frontNoteFormat'] as FrontNoteFormat,
-      backNoteFormat: map['backNoteFormat'] as BackNoteFormat,
+      frontNoteFormat: FrontNoteFormat.values.byName(map['frontNoteFormat']),
+      backNoteFormat: BackNoteFormat.values.byName(map['backNoteFormat']),
       frontSideNote:
           map['frontSideNote'] != null ? map['frontSideNote'] as String : null,
       frontSideURL:

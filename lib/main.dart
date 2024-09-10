@@ -16,7 +16,9 @@ initialization() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Hive.initFlutter();
-  await Hive.openBox("Books");
+  await Hive.openBox("books");
+  await Hive.openBox("myWrongs");
+  await Hive.openBox("favorites");
 }
 
 GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey();

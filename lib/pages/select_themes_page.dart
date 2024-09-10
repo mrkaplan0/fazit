@@ -1,10 +1,12 @@
 import "package:fazit/models/infocart_model.dart";
 import "package:fazit/pages/card_detail_page.dart";
+import "package:fazit/providers/providers.dart";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 class SelectThemesPage extends ConsumerWidget {
-  SelectThemesPage({super.key});
+  SelectThemesPage({super.key, required this.cardList});
+  final List<MyCard> cardList;
   final List<String> learnThemes = [
     "Allegemein",
     "Unternehmen",
@@ -19,6 +21,7 @@ class SelectThemesPage extends ConsumerWidget {
   ];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Themen"),
@@ -37,37 +40,8 @@ class SelectThemesPage extends ConsumerWidget {
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CardDetailPage(learnThemes[i], [
-                        MyCard(
-                            cardID: "ycytxc",
-                            theme: learnThemes[i],
-                            frontNoteFormat: FrontNoteFormat.onlyText,
-                            backNoteFormat: BackNoteFormat.photoAndText,
-                            frontSideNote: "aaaaaaaaaaaaaaaaaaaa",
-                            backSideNote:
-                                """aksdjfhlasdkuhfasdklöj What is Lorem Ipsum?
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.What is Lorem Ipsum?
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.What is Lorem Ipsum?
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.""",
-                            lastUpdatedTime: DateTime.now()),
-                        MyCard(
-                            cardID: "ycywxc",
-                            theme: learnThemes[i],
-                            frontNoteFormat: FrontNoteFormat.onlyText,
-                            backNoteFormat: BackNoteFormat.photoAndText,
-                            frontSideNote: "sssssssssssssssssssssss",
-                            backSideNote: "aksdjfhlasdkuhfasdklöj",
-                            lastUpdatedTime: DateTime.now()),
-                        MyCard(
-                            cardID: "yczryxc",
-                            theme: learnThemes[i],
-                            frontNoteFormat: FrontNoteFormat.onlyText,
-                            backNoteFormat: BackNoteFormat.photoAndText,
-                            frontSideNote:
-                                "dddddddddddddddddddddddddcyxyyyyyyyyyyyyyyyyyyyyyfgdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                            backSideNote: "aksdjfhlasdkuhfasdklöj",
-                            lastUpdatedTime: DateTime.now())
-                      ]),
+                      builder: (context) => CardDetailPage(
+                          learnThemes[i], cardsByTheme(learnThemes[i])),
                     ));
                   },
                 ),
@@ -75,5 +49,17 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
             }),
       ),
     );
+  }
+
+ 
+
+  List<MyCard> cardsByTheme(String theme) {
+    List<MyCard> list = [];
+    cardList.forEach((e) {
+      if (e.theme == theme) {
+        list.add(e);
+      }
+    });
+    return list;
   }
 }
