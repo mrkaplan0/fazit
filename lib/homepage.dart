@@ -1,5 +1,6 @@
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/pages/books_main.dart';
+import 'package:fazit/pages/my_favorites_page.dart';
 import 'package:fazit/pages/my_wrongs_page.dart';
 import 'package:fazit/pages/select_themes_page.dart';
 import 'package:fazit/providers/providers.dart';
@@ -60,6 +61,17 @@ class HomePage extends ConsumerWidget {
                       MaterialPageRoute(
                           builder: (context) =>
                               MyWrongsPage(cardList: cardList)));
+                },
+              ),
+              MenuItem(
+                text: "Meine Favorite",
+                icon: Icons.error_outline_rounded,
+                onPress: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MyFavoritesPage(cardList: cardList)));
                 },
               ),
             ],

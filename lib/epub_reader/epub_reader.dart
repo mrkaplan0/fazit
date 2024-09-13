@@ -63,7 +63,7 @@ class _EpubReaderState extends State<EpubReader> {
                     id: 1,
                     action: () async {
                       epubController.addHighlight(cfi: textSelectionCfi);
-                      print("lkjafhdsölkfhsölhj $textSelectionCfi");
+                      debugPrint("lkjafhdsölkfhsölhj $textSelectionCfi");
                     },
                   ),
                   ContextMenuItem(
@@ -79,14 +79,14 @@ class _EpubReaderState extends State<EpubReader> {
               ),
               onChaptersLoaded: (chapters) {},
               onEpubLoaded: () async {
-                print('Epub loaded');
+                debugPrint('Epub loaded');
               },
               onRelocated: (value) {
-                print("Reloacted to $value");
+                debugPrint("Reloacted to $value");
               },
               onTextSelected: (epubTextSelection) {
                 textSelectionCfi = epubTextSelection.selectionCfi;
-                print(textSelectionCfi);
+                debugPrint(textSelectionCfi);
               },
             ),
           ),

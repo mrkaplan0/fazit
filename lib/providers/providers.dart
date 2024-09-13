@@ -25,6 +25,5 @@ final textEditingProvider =
 
 final fetchCardsProvider = FutureProvider<List<MyCard>>((ref) async {
   var result = await ref.read(firestoreProvider).fetchCards();
-  print("object");
   return result;
 });

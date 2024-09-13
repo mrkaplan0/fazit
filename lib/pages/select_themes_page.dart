@@ -1,6 +1,5 @@
 import "package:fazit/models/infocart_model.dart";
 import "package:fazit/pages/card_detail_page.dart";
-import "package:fazit/providers/providers.dart";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
@@ -21,7 +20,6 @@ class SelectThemesPage extends ConsumerWidget {
   ];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Themen"),
@@ -51,15 +49,13 @@ class SelectThemesPage extends ConsumerWidget {
     );
   }
 
- 
-
   List<MyCard> cardsByTheme(String theme) {
     List<MyCard> list = [];
-    cardList.forEach((e) {
+    for (var e in cardList) {
       if (e.theme == theme) {
         list.add(e);
       }
-    });
+    }
     return list;
   }
 }

@@ -1,13 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:fazit/homepage.dart';
-import 'package:fazit/login/loginpage.dart';
+import 'package:fazit/pages/login/loginpage.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/viewModels/user_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-enum LoginStatus { Logined, NotLogin }
 
 class LandingPage extends ConsumerWidget {
   const LandingPage({super.key});
@@ -20,7 +18,7 @@ class LandingPage extends ConsumerWidget {
       if (user == null) {
         return const LoginPage();
       } else if (user.isAdmin == true) {
-        return  HomePage();
+        return HomePage();
       } else {
         debugPrint("router home user $user");
         return const Scaffold(

@@ -31,23 +31,9 @@ class FirestoreService implements MyDatabaseDelegate {
 
       debugPrint("Okunan user nesnesi $user");
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
     return user;
-  }
-
-  @override
-  Future<bool> addCard(MyCard card) async {
-    try {
-      await db
-          .collection("Cards")
-          .doc("Cards")
-          .set({card.cardID: card.toMap()}, SetOptions(merge: true));
-
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   @override

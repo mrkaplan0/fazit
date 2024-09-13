@@ -10,10 +10,10 @@ class MyFavoritesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CardDetailPage("Meine Favorite", fetchMyWrongs(ref));
+    return CardDetailPage("Meine Favorite", fetchMyFavorites(ref));
   }
 
-  List<MyCard> fetchMyWrongs(WidgetRef ref) {
+  List<MyCard> fetchMyFavorites(WidgetRef ref) {
     var cardIDsList = ref.read(localServiceProvider).fetchMyFavorites();
 
     return cardList.where((card) => cardIDsList.contains(card.cardID)).toList();
