@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:fazit/homepage.dart';
+import 'package:fazit/pages/homepage.dart';
 import 'package:fazit/pages/login/loginpage.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/viewModels/user_viewmodel.dart';

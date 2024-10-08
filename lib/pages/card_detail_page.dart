@@ -1,7 +1,7 @@
 import 'dart:math';
-
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/providers/providers.dart';
+import 'package:fazit/widgets/my_text_widget.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
@@ -24,110 +24,112 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
     final cardHeight = MediaQuery.of(context).size.height * 7 / 9;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Stack(
-          children: widget.cardList!.map((card) {
-            int index = widget.cardList!.indexOf(card);
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.cardList?.length,
+          itemBuilder: (context, i) {
+            if (widget.cardList != null) {
+              var card = widget.cardList![i];
+              return Column(
+                children: [
+                  Dismissible(
+                    key: Key(card.cardID),
+                    direction: DismissDirection.horizontal,
+                    onUpdate: (details) {
+                      ref.invalidate(displayFrontProvider);
+                    },
+                    onDismissed: (direction) {
+                      setState(() {
+                        widget.cardList!.removeAt(i);
+                      });
+                      if (direction == DismissDirection.endToStart) {
+                        // On left swipe add card to local db as Wrong
 
-            return Column(
-              children: [
-                Dismissible(
-                  key: Key(card.cardID),
-                  direction: DismissDirection.horizontal,
-                  onUpdate: (details) {
-                    ref.invalidate(displayFrontProvider);
-                  },
-                  onDismissed: (direction) {
-                    setState(() {
-                      widget.cardList!.removeAt(index);
-                    });
-                    if (direction == DismissDirection.endToStart) {
-                      // On left swipe add card to local db as Wrong
-
-                      ref
-                          .read(localServiceProvider)
-                          .addWrongToLocal(card.cardID);
-                    } else if (direction == DismissDirection.startToEnd) {
-                      // on right swipe delete wrong card from local db.
-                      if (ref
-                          .read(localServiceProvider)
-                          .checkwrongscardIDFromLocal(card.cardID)) {
                         ref
                             .read(localServiceProvider)
-                            .deleteWrongFromLocal(card.cardID);
+                            .addWrongToLocal(card.cardID);
+                      } else if (direction == DismissDirection.startToEnd) {
+                        // on right swipe delete wrong card from local db.
+                        if (ref
+                            .read(localServiceProvider)
+                            .checkwrongscardIDFromLocal(card.cardID)) {
+                          ref
+                              .read(localServiceProvider)
+                              .deleteWrongFromLocal(card.cardID);
+                        }
                       }
-                    }
-                  },
-                  background: Container(
-                    color: Colors.green,
-                    alignment: Alignment.centerRight,
-                    child: const Icon(Icons.thumb_up, color: Colors.white),
-                  ),
-                  secondaryBackground: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerLeft,
-                    child: const Icon(Icons.thumb_down, color: Colors.white),
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      ref.read(displayFrontProvider.notifier).state =
-                          !ref.read(displayFrontProvider);
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 600),
-                          switchInCurve: Curves.easeInBack,
-                          switchOutCurve: Curves.easeInBack.flipped,
-                          layoutBuilder: (widget, list) =>
-                              Stack(children: [widget!, ...list]),
-                          transitionBuilder: _transitionBuilder,
-                          child: ref.watch(displayFrontProvider)
-                              ? _cardFront(cardHeight, card)
-                              : _cardBack(cardHeight, card)),
+                    background: Container(
+                      color: Colors.green,
+                      alignment: Alignment.centerRight,
+                      child: const Icon(Icons.thumb_up, color: Colors.white),
+                    ),
+                    secondaryBackground: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerLeft,
+                      child: const Icon(Icons.thumb_down, color: Colors.white),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        print(ref.read(displayFrontProvider.notifier).state =
+                            !ref.read(displayFrontProvider));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 600),
+                            switchInCurve: Curves.easeInBack,
+                            switchOutCurve: Curves.easeInBack.flipped,
+                            layoutBuilder: (widget, list) =>
+                                Stack(children: [widget!, ...list]),
+                            transitionBuilder: _transitionBuilder,
+                            child: ref.watch(displayFrontProvider)
+                                ? _cardFront(cardHeight, card)
+                                : _cardBack(cardHeight, card)),
+                      ),
                     ),
                   ),
-                ),
-                IconButton.filledTonal(
-                    onPressed: () {
-                      if (ref
-                          .read(localServiceProvider)
-                          .checkcardIDFromLocal(card.cardID)) {
-                        var result = ref
+                  IconButton.filledTonal(
+                      onPressed: () {
+                        if (ref
                             .read(localServiceProvider)
-                            .deleteFavoriteFromLocal(card.cardID);
-                        if (result) {
-                          ref
-                              .refresh(localServiceProvider)
-                              .checkcardIDFromLocal(card.cardID);
-                        }
-                      } else {
-                        var result = ref
-                            .read(localServiceProvider)
-                            .addFavoriteToLocal(card.cardID);
+                            .checkcardIDFromLocal(card.cardID)) {
+                          var result = ref
+                              .read(localServiceProvider)
+                              .deleteFavoriteFromLocal(card.cardID);
+                          if (result) {
+                            ref
+                                .refresh(localServiceProvider)
+                                .checkcardIDFromLocal(card.cardID);
+                          }
+                        } else {
+                          var result = ref
+                              .read(localServiceProvider)
+                              .addFavoriteToLocal(card.cardID);
 
-                        if (result) {
-                          ref
-                              .refresh(localServiceProvider)
-                              .checkcardIDFromLocal(card.cardID);
+                          if (result) {
+                            ref
+                                .refresh(localServiceProvider)
+                                .checkcardIDFromLocal(card.cardID);
+                          }
                         }
-                      }
-                    },
-                    isSelected: ref
-                        .watch(localServiceProvider)
-                        .checkcardIDFromLocal(card.cardID),
-                    icon: const Icon(Icons.star_border_outlined),
-                    selectedIcon: const Icon(Icons.star))
-              ],
-            );
-          }).toList(),
-        ),
-      ),
-    );
+                      },
+                      isSelected: ref
+                          .watch(localServiceProvider)
+                          .checkcardIDFromLocal(card.cardID),
+                      icon: const Icon(Icons.star_border_outlined),
+                      selectedIcon: const Icon(Icons.star))
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ));
   }
 
   Widget _transitionBuilder(Widget widget, Animation<double> animation) {
@@ -201,24 +203,24 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
 
     switch (card.backNoteFormat) {
       case BackNoteFormat.onlyText:
-        mainBody = [onlyText(card.backSideNote ?? "")];
+        mainBody = [MyTextWidget(text: card.backSideNote ?? "")];
         break;
       case BackNoteFormat.photoAndText:
         mainBody = [
           imageWidget(card.backSideURL),
           const SizedBox(height: 10),
-          onlyText(card.backSideNote ?? "")
+          MyTextWidget(text: card.backSideNote ?? "")
         ];
         break;
       case BackNoteFormat.textandPhoto:
         mainBody = [
-          onlyText(card.backSideNote ?? ""),
+          MyTextWidget(text: card.backSideNote ?? ""),
           const SizedBox(height: 10),
           imageWidget(card.backSideURL)
         ];
         break;
       default:
-        mainBody = [onlyText(card.backSideNote ?? "")];
+        mainBody = [MyTextWidget(text: card.backSideNote ?? "")];
     }
 
     return mainBody;
@@ -229,29 +231,25 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
 
     switch (card.frontNoteFormat) {
       case FrontNoteFormat.onlyText:
-        mainBody = [onlyText(card.frontSideNote ?? "")];
+        mainBody = [MyTextWidget(text: card.frontSideNote ?? "")];
         break;
       case FrontNoteFormat.photoAndText:
         mainBody = [
           imageWidget(card.frontSideURL),
-          onlyText(card.frontSideNote ?? "")
+          MyTextWidget(text: card.frontSideNote ?? "")
         ];
         break;
       case FrontNoteFormat.textandPhoto:
         mainBody = [
-          onlyText(card.frontSideNote ?? ""),
+          MyTextWidget(text: card.frontSideNote ?? ""),
           imageWidget(card.frontSideURL)
         ];
         break;
       default:
-        mainBody = [onlyText(card.frontSideNote ?? "")];
+        mainBody = [MyTextWidget(text: card.frontSideNote ?? "")];
     }
 
     return mainBody;
-  }
-
-  Text onlyText(String text) {
-    return Text(text);
   }
 
   Image imageWidget(String? url) {

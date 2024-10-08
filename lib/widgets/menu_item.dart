@@ -22,8 +22,8 @@ class MenuItem extends StatelessWidget {
       child: InkWell(
         onTap: onPress,
         child: Container(
-          width: width / 3 - 5,
-          height: width / 3 - 5,
+          width: width / 2 - 20,
+          height: width / 2 - 20,
           decoration: BoxDecoration(
               color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
                   .withOpacity(0.7),
