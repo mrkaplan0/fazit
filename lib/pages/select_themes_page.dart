@@ -1,11 +1,16 @@
 import "package:fazit/models/infocart_model.dart";
 import "package:fazit/pages/card_detail_page.dart";
 import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
 
-class SelectThemesPage extends ConsumerWidget {
+class SelectThemesPage extends StatefulWidget {
   SelectThemesPage({super.key, required this.cardList});
   final List<MyCard> cardList;
+
+  @override
+  State<SelectThemesPage> createState() => _SelectThemesPageState();
+}
+
+class _SelectThemesPageState extends State<SelectThemesPage> {
   final List<String> learnThemes = [
     "Allegemein",
     "Unternehmen",
@@ -18,44 +23,63 @@ class SelectThemesPage extends ConsumerWidget {
     "Daten",
     "Netzwerke und Dienste"
   ];
+
+  final _myListKey = GlobalKey<AnimatedListState>();
+
+  bool startAnimation = false;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        startAnimation = true;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      key: _myListKey,
       appBar: AppBar(
         title: const Text("Themen"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
             itemCount: learnThemes.length,
             itemBuilder: (context, i) {
-              return Card(
-                child: ListTile(
-                  title: Text(learnThemes[i]),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    color: Colors.grey[300],
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CardDetailPage(
-                          learnThemes[i], cardsByTheme(learnThemes[i])),
-                    ));
-                  },
-                ),
-              );
-            }),
+              return AnimatedContainer(
+                  curve: Curves.easeInOut,
+                  duration: Duration(milliseconds: 400 + (i * 150)),
+                  transform: Matrix4.translationValues(
+                      startAnimation ? 0 : screenWidth, 0, 0),
+                  child: cardinListWidget(i, context));
+            },
+          )),
+    );
+  }
+
+  Card cardinListWidget(int i, BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(learnThemes[i]),
+        trailing: Icon(
+          Icons.arrow_forward_ios_outlined,
+          color: Colors.grey[300],
+        ),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                CardDetailPage(learnThemes[i], cardsByTheme(learnThemes[i])),
+          ));
+        },
       ),
     );
   }
 
   List<MyCard> cardsByTheme(String theme) {
-    List<MyCard> list = [];
-    for (var e in cardList) {
-      if (e.theme == theme) {
-        list.add(e);
-      }
-    }
-    return list;
+    return widget.cardList.where((card) => card.theme == theme).toList();
   }
 }

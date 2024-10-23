@@ -32,8 +32,10 @@ class _MyTextWidgetState extends State<MyTextWidget> {
 
     return QuillEditor.basic(
       controller: _textController,
-      configurations:
-          const QuillEditorConfigurations(autoFocus: false, showCursor: false),
+      configurations: const QuillEditorConfigurations(
+          autoFocus: false,
+          showCursor: false,
+          enableInteractiveSelection: false),
     );
   }
 }
