@@ -1,5 +1,6 @@
 import 'package:fazit/firebase_options.dart';
 import 'package:fazit/landingpage.dart';
+import 'package:fazit/widgets/animated_progr_indicator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,10 +59,7 @@ class MyApp extends StatelessWidget {
         // Otherwise, show something whilst waiting for initialization to complete
         return const MaterialApp(
             home: Scaffold(
-          body: SizedBox(
-              height: 30,
-              width: 50,
-              child: Image(image: AssetImage('assets/images/fazit_logo.png'))),
+          body: ContainerProgressIndicator(),
         ));
       },
     );

@@ -4,6 +4,7 @@ import 'package:fazit/pages/homepage.dart';
 import 'package:fazit/pages/login/loginpage.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/viewModels/user_viewmodel.dart';
+import 'package:fazit/widgets/animated_progr_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,10 +31,7 @@ class LandingPage extends ConsumerWidget {
     } else {
       return Container(
         color: Colors.white,
-        child: const Center(
-            child: CircularProgressIndicator(
-          color: Colors.cyan,
-        )),
+        child: const Center(child: ContainerProgressIndicator()),
       );
     }
   }

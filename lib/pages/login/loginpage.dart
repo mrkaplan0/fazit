@@ -3,6 +3,7 @@ import 'package:fazit/contrast.dart';
 import 'package:fazit/pages/login/register_page.dart';
 import 'package:fazit/main.dart';
 import 'package:fazit/providers/providers.dart';
+import 'package:fazit/widgets/animated_progr_indicator.dart';
 import 'package:fazit/widgets/animation_switcher.dart';
 import 'package:fazit/widgets/email_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,11 +46,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Center(
             child: AnimatedSwitcherWidget(
               duration: 2,
-              widget1: Image.asset(
+              widget1:
+                  const ContainerProgressIndicator(width: 150, height: 150),
+              /* Image.asset(
                 "assets/fazit_logo.png",
                 width: 500,
                 height: 500,
-              ),
+              ), */
               widget2: SizedBox(
                 width: 500,
                 height: 500,

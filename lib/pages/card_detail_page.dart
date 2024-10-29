@@ -34,7 +34,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
             : AppBar(title: Text(widget.title), actions: [
                 IconButton(
                     onPressed: () {
-                      ref.read(cardlistProvider(cardList).notifier).mixCard();
+                      ref.read(cardlistProvider(cardList).notifier).mixCard(); 
                     },
                     icon: const Icon(Icons.shuffle)),
                 IconButton(
