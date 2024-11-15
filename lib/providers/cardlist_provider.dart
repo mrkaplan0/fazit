@@ -8,16 +8,18 @@ class CardListNotifier extends FamilyNotifier<List<MyCard>, List<MyCard>> {
     return arg;
   }
 
-  removeCardAtIndex(int i) {
-    removedCards.add(state[i]);
-    state.removeAt(i);
+  removeCardAtIndex() {
+    if (state.isNotEmpty) {
+      removedCards.add(state.first);
+      state.removeAt(0);
+    }
   }
 
   undoLastCard() {
     if (removedCards.isNotEmpty) {
-      state.insert(0, removedCards.last);
-    } else {
-      return;
+      final lastCard = removedCards.removeLast();
+
+      state = [lastCard, ...state];
     }
   }
 
@@ -28,6 +30,14 @@ class CardListNotifier extends FamilyNotifier<List<MyCard>, List<MyCard>> {
   }
 
   mixCard() {
-    state.shuffle();
+    state = List.from(state)..shuffle();
+  }
+
+  bool isRemovedCardsListEmpty() {
+    if (removedCards.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -1,9 +1,10 @@
+import "package:fazit/contrast.dart";
 import "package:fazit/models/infocart_model.dart";
 import "package:fazit/pages/card_detail_page.dart";
 import "package:flutter/material.dart";
 
 class SelectThemesPage extends StatefulWidget {
-  SelectThemesPage({super.key, required this.cardList});
+  const SelectThemesPage({super.key, required this.cardList});
   final List<MyCard> cardList;
 
   @override
@@ -11,19 +12,6 @@ class SelectThemesPage extends StatefulWidget {
 }
 
 class _SelectThemesPageState extends State<SelectThemesPage> {
-  final List<String> learnThemes = [
-    "Allegemein",
-    "Unternehmen",
-    "Arbeitsplatz",
-    "Clientsnetzwerke",
-    "Schutzbedarfanalyse",
-    "Verwaltungssoftware",
-    "Serviceanfragen",
-    "Cybersysteme",
-    "Daten",
-    "Netzwerke und Dienste"
-  ];
-
   final _myListKey = GlobalKey<AnimatedListState>();
 
   bool startAnimation = false;
@@ -80,6 +68,20 @@ class _SelectThemesPageState extends State<SelectThemesPage> {
   }
 
   List<MyCard> cardsByTheme(String theme) {
-    return widget.cardList.where((card) => card.theme == theme).toList();
+    switch (theme) {
+      case "Allegemein":
+        return widget.cardList;
+      case "Verwaltungssoftware":
+        return widget.cardList
+            .where((card) =>
+                card.theme.contains(theme) ||
+                card.theme.contains("Python") ||
+                card.theme.contains("SQL-Datenbanksprache"))
+            .toList();
+      default:
+        return widget.cardList
+            .where((card) => card.theme.contains(theme))
+            .toList();
+    }
   }
 }

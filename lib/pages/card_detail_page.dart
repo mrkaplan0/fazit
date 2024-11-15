@@ -34,7 +34,9 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
             : AppBar(title: Text(widget.title), actions: [
                 IconButton(
                     onPressed: () {
-                      ref.read(cardlistProvider(cardList).notifier).mixCard(); 
+                      ref
+                          .watch(cardlistProvider(widget.cardList).notifier)
+                          .mixCard();
                     },
                     icon: const Icon(Icons.shuffle)),
                 IconButton(
@@ -49,108 +51,143 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
         body: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: cardList.length,
-                itemBuilder: (context, i) {
-                  var card = cardList[i];
-                  return Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.horizontal,
-                    onUpdate: (details) {
-                      ref.invalidate(displayFrontProvider);
-                    },
-                    onDismissed: (direction) {
-                      ref
-                          .read(cardlistProvider(widget.cardList).notifier)
-                          .removeCardAtIndex(i);
-                      ref.invalidate(displayFrontProvider);
-                      if (direction == DismissDirection.endToStart) {
-                        // On left swipe add card to local db as Wrong
+                child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: cardList.length,
+              itemBuilder: (context, i) {
+                var card = cardList[i];
+                return Dismissible(
+                  key: UniqueKey(),
+                  direction: DismissDirection.horizontal,
+                  onDismissed: (direction) {
+                    ref
+                        .read(cardlistProvider(widget.cardList).notifier)
+                        .removeCardAtIndex();
+                    ref.invalidate(displayFrontProvider);
+                    if (direction == DismissDirection.endToStart) {
+                      // On left swipe add card to local db as Wrong
 
+                      ref
+                          .read(localServiceProvider)
+                          .addWrongToLocal(card.cardID);
+                    } else if (direction == DismissDirection.startToEnd) {
+                      // on right swipe delete wrong card from local db.
+                      if (ref
+                          .read(localServiceProvider)
+                          .checkwrongscardIDFromLocal(card.cardID)) {
                         ref
                             .read(localServiceProvider)
-                            .addWrongToLocal(card.cardID);
-                      } else if (direction == DismissDirection.startToEnd) {
-                        // on right swipe delete wrong card from local db.
-                        if (ref
-                            .read(localServiceProvider)
-                            .checkwrongscardIDFromLocal(card.cardID)) {
-                          ref
-                              .read(localServiceProvider)
-                              .deleteWrongFromLocal(card.cardID);
-                        }
+                            .deleteWrongFromLocal(card.cardID);
                       }
+                    }
+                  },
+                  background: Container(
+                    color: Colors.green,
+                    alignment: Alignment.centerRight,
+                    child: const Icon(Icons.thumb_up, color: Colors.white),
+                  ),
+                  secondaryBackground: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    child: const Icon(Icons.thumb_down, color: Colors.white),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.read(displayFrontProvider.notifier).state =
+                          !ref.read(displayFrontProvider);
                     },
-                    background: Container(
-                      color: Colors.green,
-                      alignment: Alignment.centerRight,
-                      child: const Icon(Icons.thumb_up, color: Colors.white),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 600),
+                              switchInCurve: Curves.easeInBack,
+                              switchOutCurve: Curves.easeInBack.flipped,
+                              layoutBuilder: (widget, list) =>
+                                  Stack(children: [widget!, ...list]),
+                              transitionBuilder: _transitionBuilder,
+                              child: ref.watch(displayFrontProvider)
+                                  ? _cardFront(cardHeight, card)
+                                  : _cardBack(cardHeight, card)),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            undoIconButton(),
+                            favoriteButton(card),
+                            infoIconButton(context, card),
+                          ],
+                        )
+                      ],
                     ),
-                    secondaryBackground: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerLeft,
-                      child: const Icon(Icons.thumb_down, color: Colors.white),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        print(ref.read(displayFrontProvider.notifier).state =
-                            !ref.read(displayFrontProvider));
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 600),
-                                switchInCurve: Curves.easeInBack,
-                                switchOutCurve: Curves.easeInBack.flipped,
-                                layoutBuilder: (widget, list) =>
-                                    Stack(children: [widget!, ...list]),
-                                transitionBuilder: _transitionBuilder,
-                                child: ref.watch(displayFrontProvider)
-                                    ? _cardFront(cardHeight, card)
-                                    : _cardBack(cardHeight, card)),
-                          ),
-                          IconButton.filledTonal(
-                              onPressed: () {
-                                if (ref
-                                    .read(localServiceProvider)
-                                    .checkcardIDFromLocal(card.cardID)) {
-                                  var result = ref
-                                      .read(localServiceProvider)
-                                      .deleteFavoriteFromLocal(card.cardID);
-                                  if (result) {
-                                    ref
-                                        .refresh(localServiceProvider)
-                                        .checkcardIDFromLocal(card.cardID);
-                                  }
-                                } else {
-                                  var result = ref
-                                      .read(localServiceProvider)
-                                      .addFavoriteToLocal(card.cardID);
-
-                                  if (result) {
-                                    ref
-                                        .refresh(localServiceProvider)
-                                        .checkcardIDFromLocal(card.cardID);
-                                  }
-                                }
-                              },
-                              isSelected: ref
-                                  .watch(localServiceProvider)
-                                  .checkcardIDFromLocal(card.cardID),
-                              icon: const Icon(Icons.star_border_outlined),
-                              selectedIcon: const Icon(Icons.star))
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                );
+              },
+            )),
           ],
         ));
+  }
+
+  IconButton undoIconButton() {
+    return IconButton(
+        onPressed: () {
+          ref.read(cardlistProvider(widget.cardList).notifier).undoLastCard();
+        },
+        icon: const Icon(
+          Icons.undo_rounded,
+          color: Colors.grey,
+        ));
+  }
+
+  IconButton infoIconButton(BuildContext context, MyCard card) {
+    return IconButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              titleTextStyle:
+                  const TextStyle(fontSize: 20, color: Colors.black87),
+              title: const Text("Letzte Aktualisierungszeit:"),
+              content: Text(card.lastUpdatedTime.toString()),
+            ),
+          );
+        },
+        icon: const Icon(
+          Icons.info_outline_rounded,
+          color: Colors.grey,
+        ));
+  }
+
+  IconButton favoriteButton(MyCard card) {
+    return IconButton.filledTonal(
+        onPressed: () {
+          if (ref
+              .read(localServiceProvider)
+              .checkcardIDFromLocal(card.cardID)) {
+            var result = ref
+                .read(localServiceProvider)
+                .deleteFavoriteFromLocal(card.cardID);
+            if (result) {
+              ref
+                  .refresh(localServiceProvider)
+                  .checkcardIDFromLocal(card.cardID);
+            }
+          } else {
+            var result =
+                ref.read(localServiceProvider).addFavoriteToLocal(card.cardID);
+
+            if (result) {
+              ref
+                  .refresh(localServiceProvider)
+                  .checkcardIDFromLocal(card.cardID);
+            }
+          }
+        },
+        isSelected:
+            ref.watch(localServiceProvider).checkcardIDFromLocal(card.cardID),
+        icon: const Icon(Icons.star_border_outlined),
+        selectedIcon: const Icon(Icons.star));
   }
 
   Widget _transitionBuilder(Widget widget, Animation<double> animation) {
@@ -275,7 +312,9 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
 
   Image imageWidget(String? url) {
     if (url != null) {
-      return Image.network(url);
+      return Image.network(url, errorBuilder: (context, error, stackTrace) {
+        return Image.asset("assets/image_error.png", width: 200);
+      });
     } else {
       return Image.asset(
         "assets/image_error.png",

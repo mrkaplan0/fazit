@@ -49,7 +49,8 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.white,
               appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color.fromARGB(0, 86, 91, 212)),
               useMaterial3: true,
             ),
             home: const LandingPage(),

@@ -7,7 +7,7 @@ enum BackNoteFormat { onlyText, photoAndText, textandPhoto }
 
 class MyCard {
   final String cardID;
-  String theme;
+  List<String> theme;
   FrontNoteFormat frontNoteFormat;
   BackNoteFormat backNoteFormat;
   String? frontSideNote;
@@ -17,7 +17,9 @@ class MyCard {
   String? sourceInfo;
   DateTime lastUpdatedTime;
   DateTime? lastPracticeTime;
+  String createdBy;
   bool? isTrue;
+  int? importanceLevel;
   MyCard({
     required this.cardID,
     required this.theme,
@@ -30,12 +32,14 @@ class MyCard {
     this.sourceInfo,
     required this.lastUpdatedTime,
     this.lastPracticeTime,
+    required this.createdBy,
     this.isTrue,
+    this.importanceLevel,
   });
 
   MyCard copyWith({
     String? cardID,
-    String? theme,
+    List<String>? theme,
     FrontNoteFormat? frontNoteFormat,
     BackNoteFormat? backNoteFormat,
     String? frontSideNote,
@@ -45,7 +49,9 @@ class MyCard {
     String? sourceInfo,
     DateTime? lastUpdatedTime,
     DateTime? lastPracticeTime,
+    String? createdBy,
     bool? isTrue,
+    int? importanceLevel,
   }) {
     return MyCard(
       cardID: cardID ?? this.cardID,
@@ -59,7 +65,9 @@ class MyCard {
       sourceInfo: sourceInfo ?? this.sourceInfo,
       lastUpdatedTime: lastUpdatedTime ?? this.lastUpdatedTime,
       lastPracticeTime: lastPracticeTime ?? this.lastPracticeTime,
+      createdBy: createdBy ?? this.createdBy,
       isTrue: isTrue ?? this.isTrue,
+      importanceLevel: importanceLevel ?? this.importanceLevel,
     );
   }
 
@@ -76,76 +84,52 @@ class MyCard {
       'sourceInfo': sourceInfo,
       'lastUpdatedTime': lastUpdatedTime.millisecondsSinceEpoch,
       'lastPracticeTime': lastPracticeTime?.millisecondsSinceEpoch,
+      'createdBy': createdBy,
       'isTrue': isTrue,
+      'importanceLevel': importanceLevel,
     };
   }
 
-  factory MyCard.fromMap(Map<String, dynamic> map) {
-    return MyCard(
-      cardID: map['cardID'] as String,
-      theme: map['theme'] as String,
-      frontNoteFormat: FrontNoteFormat.values.byName(map['frontNoteFormat']),
-      backNoteFormat: BackNoteFormat.values.byName(map['backNoteFormat']),
-      frontSideNote:
-          map['frontSideNote'] != null ? map['frontSideNote'] as String : null,
-      frontSideURL:
-          map['frontSideURL'] != null ? map['frontSideURL'] as String : null,
-      backSideNote:
-          map['backSideNote'] != null ? map['backSideNote'] as String : null,
-      backSideURL:
-          map['backSideURL'] != null ? map['backSideURL'] as String : null,
-      sourceInfo:
-          map['sourceInfo'] != null ? map['sourceInfo'] as String : null,
-      lastUpdatedTime:
-          DateTime.fromMillisecondsSinceEpoch(map['lastUpdatedTime'] as int),
-      lastPracticeTime: map['lastPracticeTime'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastPracticeTime'] as int)
-          : null,
-      isTrue: map['isTrue'] != null ? map['isTrue'] as bool : null,
-    );
-  }
+  MyCard.fromMap(Map<String, dynamic> map)
+      : cardID = map['cardID'] as String,
+        theme = List<String>.from(map['theme']),
+        frontNoteFormat = FrontNoteFormat.values.byName(map['frontNoteFormat']),
+        backNoteFormat = BackNoteFormat.values.byName(map['backNoteFormat']),
+        frontSideNote = map['frontSideNote'] != null
+            ? map['frontSideNote'] as String
+            : null,
+        frontSideURL =
+            map['frontSideURL'] != null ? map['frontSideURL'] as String : null,
+        backSideNote = map['backSideNote'] != null
+            ? (map['backSideNote'] as String)
+            : null,
+        backSideURL =
+            map['backSideURL'] != null ? map['backSideURL'] as String : null,
+        sourceInfo =
+            map['sourceInfo'] != null ? map['sourceInfo'] as String : null,
+        lastUpdatedTime =
+            DateTime.fromMillisecondsSinceEpoch(map['lastUpdatedTime'] as int),
+        lastPracticeTime = map['lastPracticeTime'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(
+                map['lastPracticeTime'] as int)
+            : null,
+        createdBy = map['createdBy'] as String,
+        isTrue = map['isTrue'] != null ? map['isTrue'] as bool : null,
+        importanceLevel = map['importanceLevel'] != null
+            ? map['importanceLevel'] as int
+            : null;
 
   String toJson() => json.encode(toMap());
+
+  static String textMaptoJson(String text) {
+    return jsonDecode(text);
+  }
 
   factory MyCard.fromJson(String source) =>
       MyCard.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'MyCard(cardID: $cardID, theme: $theme, frontNoteFormat: $frontNoteFormat, backNoteFormat: $backNoteFormat, frontSideNote: $frontSideNote, frontSideURL: $frontSideURL, backSideNote: $backSideNote, backSideURL: $backSideURL, sourceInfo: $sourceInfo, lastUpdatedTime: $lastUpdatedTime, lastPracticeTime: $lastPracticeTime, isTrue: $isTrue)';
-  }
-
-  @override
-  bool operator ==(covariant MyCard other) {
-    if (identical(this, other)) return true;
-
-    return other.cardID == cardID &&
-        other.theme == theme &&
-        other.frontNoteFormat == frontNoteFormat &&
-        other.backNoteFormat == backNoteFormat &&
-        other.frontSideNote == frontSideNote &&
-        other.frontSideURL == frontSideURL &&
-        other.backSideNote == backSideNote &&
-        other.backSideURL == backSideURL &&
-        other.sourceInfo == sourceInfo &&
-        other.lastUpdatedTime == lastUpdatedTime &&
-        other.lastPracticeTime == lastPracticeTime &&
-        other.isTrue == isTrue;
-  }
-
-  @override
-  int get hashCode {
-    return cardID.hashCode ^
-        theme.hashCode ^
-        frontNoteFormat.hashCode ^
-        backNoteFormat.hashCode ^
-        frontSideNote.hashCode ^
-        frontSideURL.hashCode ^
-        backSideNote.hashCode ^
-        backSideURL.hashCode ^
-        sourceInfo.hashCode ^
-        lastUpdatedTime.hashCode ^
-        lastPracticeTime.hashCode ^
-        isTrue.hashCode;
+    return 'MyCards(cardID: $cardID, theme: $theme, frontNoteFormat: $frontNoteFormat, backNoteFormat: $backNoteFormat, frontSideNote: $frontSideNote, frontSideURL: $frontSideURL, backSideNote: $backSideNote, backSideURL: $backSideURL, sourceInfo: $sourceInfo, lastUpdatedTime: $lastUpdatedTime, lastPracticeTime: $lastPracticeTime, createdBy: $createdBy, isTrue: $isTrue, importanceLevel: $importanceLevel)';
   }
 }

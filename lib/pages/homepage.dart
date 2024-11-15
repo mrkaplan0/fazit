@@ -4,7 +4,6 @@ import 'package:fazit/pages/my_favorites_page.dart';
 import 'package:fazit/pages/my_wrongs_page.dart';
 import 'package:fazit/pages/select_themes_page.dart';
 import 'package:fazit/providers/providers.dart';
-import 'package:fazit/widgets/animated_progr_indicator.dart';
 import 'package:fazit/widgets/menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
