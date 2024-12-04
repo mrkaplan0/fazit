@@ -19,5 +19,6 @@ final List<String> learnThemes = [
   "Daten",
   "Netzwerke und Dienste",
   "Python",
-  "SQL-Datenbanksprache"
+  "SQL-Datenbanksprache",
+  "Git-Befehle"
 ];

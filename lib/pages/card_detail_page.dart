@@ -27,6 +27,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
   Widget build(BuildContext context) {
     final cardHeight = MediaQuery.of(context).size.height * 7 / 9;
     var cardList = ref.watch(cardlistProvider(widget.cardList));
+
     return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: ref.watch(isSearchBarActiveProvider)
@@ -56,14 +57,16 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
               itemCount: cardList.length,
               itemBuilder: (context, i) {
                 var card = cardList[i];
+
                 return Dismissible(
-                  key: UniqueKey(),
+                  key: ValueKey(cardList[i].cardID),
                   direction: DismissDirection.horizontal,
                   onDismissed: (direction) {
+                    ref.invalidate(displayFrontProvider);
                     ref
                         .read(cardlistProvider(widget.cardList).notifier)
                         .removeCardAtIndex();
-                    ref.invalidate(displayFrontProvider);
+
                     if (direction == DismissDirection.endToStart) {
                       // On left swipe add card to local db as Wrong
 
@@ -367,7 +370,6 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
               return List<Card>.generate(filteredList.length, (int index) {
                 return Card(
                   child: ListTile(
-                    // tileColor: Colors.amber,
                     title: MyTextWidget(
                         text: filteredList[index].frontSideNote ?? ""),
                     onTap: () {

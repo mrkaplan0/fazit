@@ -13,7 +13,7 @@ import firebase_core
 import flutter_inappwebview_macos
 import path_provider_foundation
 import pdfx
-import quill_native_bridge
+import quill_native_bridge_macos
 import shared_preferences_foundation
 import url_launcher_macos
 
