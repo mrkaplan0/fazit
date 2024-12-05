@@ -30,7 +30,9 @@ class LandingPage extends ConsumerWidget {
       }
     } else {
       return Container(
-        color: Colors.white,
+        color: ref.watch(themeModeProvider) == ThemeMode.light
+            ? Colors.white
+            : Colors.black45,
         child: const Center(child: ContainerProgressIndicator()),
       );
     }

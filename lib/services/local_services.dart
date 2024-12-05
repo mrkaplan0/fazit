@@ -1,44 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class LocalServices {
-  var wrongsBox = Hive.box('myWrongs');
+  var themeBox = Hive.box('myTheme');
   var favoritesBox = Hive.box("favorites");
-
-  bool addWrongToLocal(String cardID) {
-    try {
-      wrongsBox.put(cardID, cardID);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  bool deleteWrongFromLocal(String cardID) {
-    try {
-      wrongsBox.delete(cardID);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  List<String> fetchMyWrongs() {
-    List<String> listIDs = [];
-
-    wrongsBox.values.map((e) {
-      listIDs.add(e.toString());
-    }).toList();
-
-    return listIDs;
-  }
-
-  bool checkwrongscardIDFromLocal(String cardID) {
-    try {
-      return wrongsBox.containsKey(cardID);
-    } catch (e) {
-      return false;
-    }
-  }
 
   bool addFavoriteToLocal(String cardID) {
     try {
@@ -74,5 +39,20 @@ class LocalServices {
     }).toList();
 
     return listIDs;
+  }
+
+  void saveThemeMode(ThemeMode mode) {
+    themeBox.put("themeMode", mode == ThemeMode.dark ? "dark" : "light");
+  }
+
+  ThemeMode loadThemeMode() {
+    final storedTheme = themeBox.get("themeMode", defaultValue: "light");
+    return storedTheme == "dark" ? ThemeMode.dark : ThemeMode.light;
+  }
+
+  // Tema modunu değiştirme ve Hive'a kaydetme
+  void toggleThemeMode(ThemeMode mode) {
+    mode = mode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    saveThemeMode(mode);
   }
 }

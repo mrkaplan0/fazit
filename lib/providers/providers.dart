@@ -18,6 +18,12 @@ final localServiceProvider = Provider<LocalServices>((ref) => LocalServices());
 //user model
 final userViewModelProvider = ChangeNotifierProvider((_) => UserViewModel());
 
+//dark/light mode
+final themeModeProvider = StateProvider<ThemeMode>((ref) {
+  var mode = ref.read(localServiceProvider).loadThemeMode();
+  return mode;
+});
+
 final textEditingProvider =
     StateProvider.autoDispose<TextEditingController>((ref) {
   TextEditingController editingController = TextEditingController();
