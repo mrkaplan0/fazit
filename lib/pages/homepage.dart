@@ -1,3 +1,4 @@
+import 'package:fazit/contrast.dart';
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/pages/books_main.dart';
 import 'package:fazit/pages/my_favorites_page.dart';
@@ -14,17 +15,13 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
     fetchCards(ref);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Image.asset(
-            "assets/fazit_text.png",
-            height: 35,
-          ),
-        ),
+        title: appBarLogoWidget,
+        actions: [changeThemeButton(themeMode, ref), logoutButton(ref)],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -72,5 +69,32 @@ class HomePage extends ConsumerWidget {
 
   void fetchCards(WidgetRef ref) async {
     cardList = await ref.read(fetchCardsProvider.future);
+  }
+
+  Padding logoutButton(WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20.0),
+      child: IconButton(
+        onPressed: () async {
+          await ref.watch(userViewModelProvider).signOut();
+        },
+        tooltip: "Abmelden",
+        icon: const Icon(Icons.logout),
+      ),
+    );
+  }
+
+  IconButton changeThemeButton(ThemeMode themeMode, WidgetRef ref) {
+    return IconButton(
+      onPressed: () {
+        // to change theme
+        themeMode == ThemeMode.light
+            ? ref.read(themeModeProvider.notifier).state = ThemeMode.dark
+            : ref.read(themeModeProvider.notifier).state = ThemeMode.light;
+      },
+      icon: themeMode == ThemeMode.light
+          ? const Icon(Icons.light_mode)
+          : const Icon(Icons.dark_mode),
+    );
   }
 }

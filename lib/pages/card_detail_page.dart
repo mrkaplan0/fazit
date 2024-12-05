@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/my_card_widget.dart';
@@ -42,7 +41,9 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.grey[300],
+        backgroundColor: ref.watch(themeModeProvider) == ThemeMode.light
+            ? Colors.grey[300]
+            : null,
         appBar: ref.watch(isSearchBarActiveProvider)
             ? searchBar(widget.cardList)
             : AppBar(title: Text(widget.title), actions: [

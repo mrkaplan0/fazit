@@ -1,5 +1,7 @@
+import 'package:fazit/contrast.dart';
 import 'package:fazit/firebase_options.dart';
 import 'package:fazit/landingpage.dart';
+import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/animated_progr_indicator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,18 +20,19 @@ initialization() async {
   );
   await Hive.initFlutter();
   await Hive.openBox("books");
-  await Hive.openBox("myWrongs");
+  await Hive.openBox("myTheme");
   await Hive.openBox("favorites");
 }
 
 GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey();
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   final Future<FirebaseApp> _initialization =
       Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   MyApp({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
@@ -47,12 +50,20 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Fazit',
             theme: ThemeData(
-              scaffoldBackgroundColor: Colors.white,
-              appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: const Color.fromARGB(0, 86, 91, 212)),
+              scaffoldBackgroundColor: scaffoldBackgroundColor,
+              appBarTheme:
+                  const AppBarTheme(backgroundColor: appBarBackgroundColor),
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: const Color(0xFFF56D91)),
               useMaterial3: true,
             ),
+            darkTheme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                  brightness: Brightness.dark,
+                  seedColor: const Color(0xFFF56D91)),
+              useMaterial3: true,
+            ),
+            themeMode: themeMode,
             home: const LandingPage(),
           );
         }

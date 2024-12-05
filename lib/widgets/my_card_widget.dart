@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fazit/contrast.dart';
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/pages/card_detail_page.dart';
 import 'package:fazit/providers/providers.dart';
@@ -140,7 +141,9 @@ class _MyCardWidgetState extends ConsumerState<MyCardWidget> {
   Widget _cardFront(double height, MyCard myCard) {
     return Card(
       key: const ValueKey(true),
-      color: Colors.white,
+      color: ref.watch(themeModeProvider) == ThemeMode.light
+          ? cardColorLight
+          : cardColorDark,
       elevation: 4,
       child: Container(
           padding: const EdgeInsets.all(16.0),
@@ -163,7 +166,9 @@ class _MyCardWidgetState extends ConsumerState<MyCardWidget> {
   Widget _cardBack(double height, MyCard myCard) {
     return Card(
       key: const ValueKey(false),
-      color: Colors.white,
+      color: ref.watch(themeModeProvider) == ThemeMode.light
+          ? cardColorLight
+          : cardColorDark,
       elevation: 4,
       child: Container(
           padding: const EdgeInsets.all(16.0),
