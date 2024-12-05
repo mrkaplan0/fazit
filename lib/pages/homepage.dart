@@ -1,7 +1,6 @@
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/pages/books_main.dart';
 import 'package:fazit/pages/my_favorites_page.dart';
-import 'package:fazit/pages/my_wrongs_page.dart';
 import 'package:fazit/pages/select_themes_page.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/menu_item.dart';
@@ -51,17 +50,6 @@ class HomePage extends ConsumerWidget {
                       MaterialPageRoute(
                           builder: (context) =>
                               SelectThemesPage(cardList: cardList)));
-                },
-              ),
-              MenuItem(
-                text: "Meine Fehler",
-                icon: Icons.error_outline_rounded,
-                onPress: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              MyWrongsPage(cardList: cardList)));
                 },
               ),
               MenuItem(

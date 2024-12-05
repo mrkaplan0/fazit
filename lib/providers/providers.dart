@@ -1,5 +1,5 @@
 import 'package:fazit/models/infocart_model.dart';
-import 'package:fazit/providers/cardlist_provider.dart';
+
 import 'package:fazit/services/firebase_auth.dart';
 import 'package:fazit/services/firebase_firestore.dart';
 import 'package:fazit/services/local_services.dart';
@@ -28,7 +28,3 @@ final fetchCardsProvider = FutureProvider<List<MyCard>>((ref) async {
   var result = await ref.read(firestoreProvider).fetchCards();
   return result;
 });
-
-final cardlistProvider =
-    NotifierProviderFamily<CardListNotifier, List<MyCard>, List<MyCard>>(
-        CardListNotifier.new);
