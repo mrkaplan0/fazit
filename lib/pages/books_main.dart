@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:fazit/models/file_model.dart';
+import 'package:fazit/widgets/file_list_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../widgets/file_list_widget.dart';
 
 enum MenuItemCase { fromLocal, fromUrl }
 
@@ -117,7 +117,7 @@ Widget myDivider(String title) {
   return Column(
     children: [
       Text(title),
-      const Divider(),
+      const Divider(indent: 100, endIndent: 100),
     ],
   );
 }

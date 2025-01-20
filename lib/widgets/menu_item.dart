@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class MenuItem extends StatelessWidget {
@@ -22,8 +22,10 @@ class MenuItem extends StatelessWidget {
       child: InkWell(
         onTap: onPress,
         child: Container(
-          width: width / 2 - 20,
-          height: width / 2 - 20,
+          width:
+              Platform.isAndroid || Platform.isIOS ? width / 2 - 20 : width / 7,
+          height:
+              Platform.isAndroid || Platform.isIOS ? width / 2 - 20 : width / 7,
           decoration: BoxDecoration(
               color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
                   .withOpacity(0.7),
@@ -33,7 +35,9 @@ class MenuItem extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: width / 6,
+                size: Platform.isAndroid || Platform.isIOS
+                    ? width / 6
+                    : width / 15,
                 color: Colors.white70,
               ),
               Text(

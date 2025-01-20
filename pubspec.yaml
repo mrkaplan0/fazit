@@ -1,5 +1,5 @@
 name: fazit
-description: "A new Flutter project."
+description: "An Education App for Fachinformatiker"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -44,14 +44,15 @@ dependencies:
   hive_flutter: ^1.1.0
   file_picker: ^8.0.6
   path: ^1.9.0
-  pdfx: ^2.6.0
-  firebase_core: ^3.4.0
-  firebase_auth: ^5.2.0
-  cloud_firestore: ^5.3.0
+  pdfx: ^2.8.0
+  firebase_core: ^3.8.1
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.5.1
   easy_localization: ^3.0.5
   flutter_quill: ^10.6.5
   animated_rating_stars: ^1.0.1
   carousel_slider: ^5.0.0
+  path_provider: ^2.1.5
 
 
 dev_dependencies:

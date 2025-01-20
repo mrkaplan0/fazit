@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fazit/contrast.dart';
 import 'package:fazit/models/infocart_model.dart';
 import 'package:fazit/pages/books_main.dart';
@@ -15,6 +17,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var width = MediaQuery.of(context).size.width;
     final themeMode = ref.watch(themeModeProvider);
     fetchCards(ref);
     return Scaffold(
@@ -25,8 +28,13 @@ class HomePage extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal:
+                  Platform.isAndroid || Platform.isIOS ? 8.0 : width * 1 / 4),
           child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.end,
+            alignment: WrapAlignment.end,
+            runAlignment: WrapAlignment.end,
             children: [
               MenuItem(
                 text: "Bücher",
