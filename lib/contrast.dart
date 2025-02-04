@@ -6,6 +6,10 @@ const myBigTitleTextStyle =
     TextStyle(fontWeight: FontWeight.bold, fontSize: myBigTitleSize);
 
 const myLittleTitleTextStyle = TextStyle(fontWeight: FontWeight.bold);
+var myIconbuttonStyle = ButtonStyle(
+    shadowColor:
+        WidgetStatePropertyAll(Colors.purple.shade700.withValues(alpha: 0.8)),
+    elevation: WidgetStateProperty.all<double>(1.5));
 
 var myIconButtonHoverColor = Colors.purple.shade400;
 const activeButtonColorLight = Color(0xFFF56D91);

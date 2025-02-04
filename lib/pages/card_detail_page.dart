@@ -1,10 +1,10 @@
-import 'package:fazit/models/infocart_model.dart';
+import 'package:fazit/models/card_model.dart';
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/my_card_widget.dart';
 import 'package:fazit/widgets/my_text_widget.dart';
-import 'package:flutter/material.dart';
-import "package:flutter_riverpod/flutter_riverpod.dart";
-import 'package:carousel_slider/carousel_slider.dart';
 
 final displayFrontProvider = StateProvider.autoDispose<bool>((ref) {
   return true;

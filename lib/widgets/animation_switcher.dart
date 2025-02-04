@@ -35,9 +35,11 @@ class _AnimatedSwitcherWidgetState extends State<AnimatedSwitcherWidget> {
   }
 
   changeWidget() async {
-    await Future.delayed(const Duration(seconds: 3));
-    setState(() {
-      isVisible = !isVisible;
-    });
+    await Future.delayed(Duration(seconds: widget.delayedDuration ?? 3));
+    if (mounted) {
+      setState(() {
+        isVisible = !isVisible;
+      });
+    }
   }
 }

@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:fazit/contrast.dart';
-import 'package:fazit/models/infocart_model.dart';
+import 'package:fazit/models/card_model.dart';
 import 'package:fazit/pages/books_main.dart';
 import 'package:fazit/pages/my_favorites_page.dart';
+import 'package:fazit/pages/questions_page.dart';
 import 'package:fazit/pages/select_themes_page.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/menu_item.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class HomePage extends ConsumerWidget {
   HomePage({super.key});
   List<MyCard> cardList = [];
-
+  final String fragenBtnText = "Fragen";
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var width = MediaQuery.of(context).size.width;
@@ -68,6 +68,11 @@ class HomePage extends ConsumerWidget {
                               MyFavoritesPage(cardList: cardList)));
                 },
               ),
+              MenuItem(
+                  text: fragenBtnText,
+                  icon: Icons.question_answer,
+                  onPress: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => QuestionsPage()))),
             ],
           ),
         ),

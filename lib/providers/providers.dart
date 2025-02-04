@@ -1,5 +1,5 @@
-import 'package:fazit/models/infocart_model.dart';
-
+import 'package:fazit/models/card_model.dart';
+import 'package:fazit/models/question.dart';
 import 'package:fazit/services/firebase_auth.dart';
 import 'package:fazit/services/firebase_firestore.dart';
 import 'package:fazit/services/local_services.dart';
@@ -34,3 +34,13 @@ final fetchCardsProvider = FutureProvider<List<MyCard>>((ref) async {
   var result = await ref.read(firestoreProvider).fetchCards();
   return result;
 });
+
+final fetchQuestionsProvider = FutureProvider<List<Question>>((ref) async {
+  var result = await ref.read(firestoreProvider).fetchQuestions();
+  return result;
+});
+
+final pageControllerProv =
+    Provider.autoDispose<PageController>((ref) => PageController());
+final myPageController = StateProvider.autoDispose<PageController>(
+    (ref) => ref.read(pageControllerProv));

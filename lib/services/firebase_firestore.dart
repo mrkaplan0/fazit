@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fazit/models/infocart_model.dart';
+import 'package:fazit/models/card_model.dart';
+import 'package:fazit/models/question.dart';
 import 'package:fazit/models/user_model.dart';
 import 'package:fazit/services/delegates/database_delegate.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,22 @@ class FirestoreService implements MyDatabaseDelegate {
       return cardList;
     } catch (e) {
       return cardList;
+    }
+  }
+
+  @override
+  Future<List<Question>> fetchQuestions() async {
+    List<Question> qList = [];
+    try {
+      var result = await db.collection("Questions").doc("Questions").get();
+      if (result.data() != null) {
+        for (var element in result.data()!.values) {
+          qList.add(Question.fromMap(element));
+        }
+      }
+      return qList;
+    } catch (e) {
+      return qList;
     }
   }
 }

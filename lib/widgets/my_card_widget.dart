@@ -1,7 +1,6 @@
 import 'dart:math';
-
 import 'package:fazit/contrast.dart';
-import 'package:fazit/models/infocart_model.dart';
+import 'package:fazit/models/card_model.dart';
 import 'package:fazit/pages/card_detail_page.dart';
 import 'package:fazit/providers/providers.dart';
 import 'package:fazit/widgets/my_text_widget.dart';
