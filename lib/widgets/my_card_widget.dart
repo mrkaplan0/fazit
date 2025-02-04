@@ -211,6 +211,7 @@ class _MyCardWidgetState extends ConsumerState<MyCardWidget> {
         break;
       default:
         mainBody = [MyTextWidget(text: card.backSideNote ?? "")];
+        break;
     }
 
     return mainBody;
@@ -235,8 +236,6 @@ class _MyCardWidgetState extends ConsumerState<MyCardWidget> {
           imageWidget(card.frontSideURL)
         ];
         break;
-      default:
-        mainBody = [MyTextWidget(text: card.frontSideNote ?? "")];
     }
 
     return mainBody;

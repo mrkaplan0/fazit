@@ -3,7 +3,7 @@ import 'dart:convert';
 
 enum FrontNoteFormat { onlyText, photoAndText, textandPhoto }
 
-enum BackNoteFormat { onlyText, photoAndText, textandPhoto }
+enum BackNoteFormat { onlyText, photoAndText, textandPhoto, multiple }
 
 class MyCard {
   final String cardID;

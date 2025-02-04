@@ -33,7 +33,7 @@ class ListWidget extends StatelessWidget {
                   Icons.book_rounded,
                   size: 160,
                   color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-                      .withOpacity(0.7),
+                      .withValues(alpha: 0.7),
                 ),
                 Text(
                   shortenText(filesList[index].fileName!, 20),

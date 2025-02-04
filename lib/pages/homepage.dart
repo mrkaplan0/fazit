@@ -59,7 +59,7 @@ class HomePage extends ConsumerWidget {
               ),
               MenuItem(
                 text: "Meine Favorite",
-                icon: Icons.error_outline_rounded,
+                icon: Icons.favorite,
                 onPress: () {
                   Navigator.push(
                       context,
